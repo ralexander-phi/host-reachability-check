@@ -1,0 +1,31 @@
+table {
+  min-width: 40em;
+}
+
+tr:nth-child(even){background-color: #ddd;}
+tr:hover {background-color: #bbd;}
+
+th {
+  padding: 12px;
+  text-align: center;
+  background-color: #558859;
+  color: white;
+}
+
+td {
+  text-align:center;
+  padding: 1em;
+}
+
+.up::after {
+  content: "✅";
+}
+
+.down::after {
+  content: "❌";
+}
+
+.checking::after {
+  content: "⌛";
+}
+
