@@ -7,7 +7,7 @@ There is no backend.
 This is helpful in situations where you're not able to use a [server-side monitoring tool](https://github.com/crazy-canux/awesome-monitoring).
 Those are much more full featured, so please consider those first.
 
-This repo auto deploys to GitHub Pages, you can see a demo here.
+This repo auto deploys to GitHub Pages, you can [see a demo here](https://alexsci.com/host-reachability-check/).
 
 ## Setup
 
