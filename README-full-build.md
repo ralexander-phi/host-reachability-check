@@ -2,7 +2,7 @@
 
 You'll only need this if you're looking to contribute changes to this project, or you're looking for extra customizations.
 
-Note that the hugo build process will overwrite `public/monitor.json` with `static/monitor.json`, so make sure you preserve any edits you've made in that file.
+Note that the hugo build process will overwrite `docs/monitor.json` with `static/monitor.json`, so make sure you preserve any edits you've made in that file.
 
 ## Install Hugo
 
@@ -49,7 +49,7 @@ The site should now be visible at [http://localhost:1313/](http://localhost:1313
 
 ## Build
 
-For ease of deployments, the build output should be saved to the `public/` folder.
+For ease of deployments, the build output should be saved to the `docs/` folder.
 This ensures that anyone editing the script won't need to install all the development dependencies.
 
 You can build with:
@@ -64,6 +64,6 @@ Or using Docker:
       klakegg/hugo:0.83.1-ext-alpine \
       --minify
 
-Pay special attention to `public/monitor.json` and `static/monitor.json` to keep these in sync.
+Pay special attention to `docs/monitor.json` and `static/monitor.json` to keep these in sync.
 Once you're happy with your changes you can commit and push to deploy.
 
