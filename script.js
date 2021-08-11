@@ -31,12 +31,16 @@ function setup(config) {
     p.title = whichCheck + ' check for ' + url;
     checkDiv.appendChild(p);
 
+    var statusOuter = document.createElement('span');
+    statusOuter.classList.add('pr-2');
+    statusOuter.style = 'width: 5.5rem; display: inline-block; text-align: right';
+    p.appendChild(statusOuter);
+
     var statusSpan = document.createElement('span');
     statusSpan.classList.add('tag');
-    statusSpan.classList.add('m-2');
     statusSpan.classList.add('is-warning');
     statusSpan.innerText = 'initializing';
-    p.appendChild(statusSpan);
+    statusOuter.appendChild(statusSpan);
 
     var nameSpan = document.createElement('span');
     nameSpan.innerText = name;
