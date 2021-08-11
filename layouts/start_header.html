@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A simple static host reachability check">
+  <meta name="author" content="https://github.com/ralexander-phi/">
+
+  <title>{{.Title}}</title>
+
+  {{ $style := resources.Get "main.scss" | resources.ToCSS | minify | fingerprint | resources.PostProcess }}
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
+

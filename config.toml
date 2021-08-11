@@ -1,0 +1,10 @@
+baseURL = "/"
+languageCode = "en-us"
+title = "Reachability Checks"
+
+# Needed for GitHub Pages
+publishDir = "docs"
+
+[build]
+  writeStats = true
+

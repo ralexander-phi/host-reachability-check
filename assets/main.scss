@@ -1,0 +1,19 @@
+@charset "utf-8";
+@import "../node_modules/bulma/bulma.sass";
+
+span.statusOuter {
+  width: 5.5rem;
+  display: inline-block;
+  text-align: right;
+}
+
+span.status.is-success {
+  transition-property: background-color, width;
+  transition-duration: 1.2s;
+}
+
+span.status.is-danger {
+  transition-property: background-color, width;
+  transition-duration: 1.2s;
+}
+

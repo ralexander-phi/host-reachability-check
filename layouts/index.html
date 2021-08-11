@@ -1,19 +1,10 @@
-<!doctype html>
+{{ template "start_header.html" . }}
 
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+{{ $js := resources.Get "index.js" | resources.Minify | resources.Fingerprint }}
+<script defer src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
 
-  <title>Reachability Checks</title>
-  <meta name="description" content="A simple static host reachability check">
-  <meta name="author" content="https://github.com/ralexander-phi/">
+{{ template "end_header.html" . }}
 
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <script src="script.js" async defer></script>
-</head>
-
-<body>
 <section>
 <div class="container">
 <div class="columns">
@@ -24,7 +15,7 @@
 <h1 class="title">Reachability Checks</h1>
 
 <p id="noscript">
-  It looks like you've disabled JavaScript. This tool requires JavaScript. Feel free to audit the script, it's not minified.
+  It looks like you've disabled JavaScript. This tool requires JavaScript.
 </p>
 
 <div class="column is-half">
@@ -53,5 +44,6 @@ This is a host reachability dashboard that will perform client side reachability
 </div>
 </div>
 </section>
-</body>
-</html>
+
+{{ template "footer.html" . }}
+

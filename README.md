@@ -7,27 +7,49 @@ There is no backend.
 This is helpful in situations where you're not able to use a [server-side monitoring tool](https://github.com/Enapiuz/awesome-monitoring).
 Those are much more full featured, so please consider those first.
 
-This repo auto deploys to GitHub Pages, you can [see a demo here](https://alexsci.com/host-reachability-check/).
+You can [see a demo here](https://alexsci.com/host-reachability-check/), which serves the content in this repo.
 
 ## Setup
 
-To create your own list of monitored sites: fork this repo, customize the list of monitors, and deploy to your own GitHub pages site (or your preferred [static hosting](https://github.com/b-long/awesome-static-hosting-and-cms#free-hosting)).
+To create your own list of monitored sites:
+
+* fork this repo
+* edit `public/monitor.json`
+* deploy to [your own GitHub pages site](https://gohugo.io/hosting-and-deployment/hosting-on-github/) (or your preferred [static hosting](https://github.com/b-long/awesome-static-hosting-and-cms#free-hosting)).
+  * be sure to deploy from the `public` directory
+
 You shouldn't need to edit the HTML or javascript, just the JSON file.
 
+If you've deployed the site correctly, you should be able to see it at `https://<username>.github.io/host-reachability-check/`.
 
-## Running Locally
+## Editing on GitHub
 
-You can serve the static contents of your fork using any HTTP server.
-I prefer this python version, although [any HTTP server](https://github.com/praharshjain/http-server-one-liners) will work.
+Open https://github.com/ and navigate to your fork of this project.
+Open the `public/monitor.json` file and click the pencil icon to edit it.
 
-    python3 -m http.server 8000
-
-You can now view and test the page at [http://127.0.0.1:8080/](http://127.0.0.1:8000).
+You can commit this file and GitHub pages will update your site within a minute or so.
 
 
-## Creating monitors
+## Editing Locally
 
-Edit `monitors.json` to add the monitors you'd like to track.
+`git clone` the project to your development computer.
+
+If you're only looking to edit the monitors, then you can edit `public/monitor.json` directly.
+You can use [any http server](https://github.com/praharshjain/http-server-one-liners) to serve this content.
+I prefer the python3 version:
+
+    python -m http.server --directory public 8000
+
+You can now view your changes at [http://localhost:8000/](http://localhost:8000).
+
+Once you're happy with the changes, commit and push your changes to update your site.
+
+If you're looking to change the HTML, JavaScript, or CSS, you'll need to follow the instructions in `README-full-build.md`.
+
+
+## Configuration
+
+Edit `monitor.json` to add the sites you'd like to monitor.
 
 There are two types of monitors supported:
 * `http-get` - Performs an HTTP GET
@@ -67,6 +89,7 @@ There are various failure cases where a site's images would be loadable but the 
 As such, this simple check won't be comprehensive and is not ideal.
 
 Example:
+
 ```
 {
   "name": "example",
@@ -74,17 +97,18 @@ Example:
   "check": "img",
 }
 ```
+
 Note: `params` is not needed here.
 
 
-## Settings
+### Other Settings
 
 * `refreshSeconds` retry checks after a period of time
 
 Settings can be applied at the top level (to apply to all sites) or as an override for a per-site configuration.
 
 
-## Console and Network Logs
+## Debugging and Logging
 
 Your web browser likely supports [developer tools](https://www.computerhope.com/issues/ch002153.htm).
 

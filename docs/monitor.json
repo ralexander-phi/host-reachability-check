@@ -1,0 +1,56 @@
+{
+  "refreshSeconds": 600,
+  "burstCache": true,
+  "sites": [
+    {
+      "name": "alexsci.com",
+      "url": "https://alexsci.com/web-audible-ping/pong.txt",
+      "check": "http-get",
+      "refreshSeconds": 10,
+      "params": {
+        "permitted-status": [ 200 ]
+      }
+    },
+    {
+      "name": "httpbin (ok)",
+      "url": "https://httpbin.org/status/204",
+      "check": "http-get",
+      "refreshSeconds": 600,
+      "burstCache": false,
+      "params": {
+        "permitted-status": [ 204 ]
+      }
+    },
+    {
+      "name": "httpbin (down)",
+      "url": "https://httpbin.org/status/500",
+      "check": "http-get",
+      "refreshSeconds": 600,
+      "burstCache": false,
+      "params": {
+        "permitted-status": [ 200 ]
+      }
+    },
+    {
+      "name": "httpbin (intermittent)",
+      "url": "https://httpbin.org/status/204,500",
+      "check": "http-get",
+      "refreshSeconds": 10,
+      "burstCache": false,
+      "params": {
+        "permitted-status": [ 204 ]
+      }
+    },
+    {
+      "name": "hackernews",
+      "url": "https://news.ycombinator.com/favicon.ico",
+      "check": "img"
+    },
+    {
+      "name": "Wells Fargo",
+      "url": "https://www.wellsfargo.com/favicon.ico",
+      "check": "img"
+    }
+  ]
+}
+

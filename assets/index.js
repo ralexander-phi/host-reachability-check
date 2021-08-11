@@ -22,6 +22,11 @@ function setup(config) {
     defaultRefresh = config['refreshSeconds'];
   }
 
+  var defaultBurstCache = true;
+  if ('burstCache' in config) {
+    defaultBurstCache = config['burstCache'];
+  }
+
   for (idx in config['sites']) {
     const name = config['sites'][idx]['name'];
     const url = config['sites'][idx]['url'];
@@ -32,12 +37,13 @@ function setup(config) {
     checkDiv.appendChild(p);
 
     var statusOuter = document.createElement('span');
+    statusOuter.classList.add('statusOuter');
     statusOuter.classList.add('pr-2');
-    statusOuter.style = 'width: 5.5rem; display: inline-block; text-align: right';
     p.appendChild(statusOuter);
 
     var statusSpan = document.createElement('span');
     statusSpan.classList.add('tag');
+    statusSpan.classList.add('status');
     statusSpan.classList.add('is-warning');
     statusSpan.innerText = 'initializing';
     statusOuter.appendChild(statusSpan);
@@ -57,14 +63,19 @@ function setup(config) {
       params = config['sites'][idx]['params'];
     }
 
+    var burstCache = defaultBurstCache;
+    if ('burstCache' in config['sites'][idx]) {
+      burstCache = config['sites'][idx]['burstCache'];
+    }
+
     if ('img' == whichCheck) {
       console.log("Starting img check for " + name + " " + url +
 	      " every " + siteRefresh + " seconds");
-      imgCheck(name, url, siteRefresh, statusSpan);
+      imgCheck(name, url, siteRefresh, burstCache, statusSpan);
     } else if ('http-get' == whichCheck) {
       console.log("Starting http-get check for " + name + " " + url +
 	      " every " + siteRefresh + " seconds");
-      httpGetCheck(name, url, siteRefresh, params, statusSpan);
+      httpGetCheck(name, url, siteRefresh, burstCache, params, statusSpan);
     } else {
       console.log('Unsure what to do for ' + name + ' ' + whichCheck);
     }
@@ -77,7 +88,7 @@ function genImgCheck(name, url, siteRefresh, statusElm) {
   }
 }
 
-function imgCheck(name, url, siteRefresh, statusElm) {
+function imgCheck(name, url, siteRefresh, burstCache, statusElm) {
   setStatus(statusElm, 'checking');
 
   var img = document.createElement('img');
@@ -92,25 +103,29 @@ function imgCheck(name, url, siteRefresh, statusElm) {
     setStatus(statusElm, 'down');
   }
 
-  // Burst the browser cache
-  img.src = url + '?_cacheBurst=' + new Date().getTime();
+  var target = url;
+  if (burstCache) {
+    target = addCacheBurst(url);
+  }
+  img.src = target;
 
-  setTimeout(genImgCheck(name, url, siteRefresh, statusElm), siteRefresh*1000);
+  setTimeout(genImgCheck(name, url, siteRefresh, burstCache, statusElm), siteRefresh*1000);
 }
 
-function genHttpGetCheck(name, url, siteRefresh, params, statusElm) {
+function genHttpGetCheck(name, url, siteRefresh, burstCache, params, statusElm) {
   return function() {
-    httpGetCheck(name, url, siteRefresh, params, statusElm);
+    httpGetCheck(name, url, siteRefresh, burstCache, params, statusElm);
   }
 }
 
-function httpGetCheck(name, url, siteRefresh, params, statusElm) {
+function httpGetCheck(name, url, siteRefresh, burstCache, params, statusElm) {
   setStatus(statusElm, 'checking');
 
-  // TODO: needs to check if we have the ? already
-  //       optional
-  //       pick parameter name
-  fetch(url + '?_cacheBurst=' + new Date().getTime())
+  var target = url;
+  if (burstCache) {
+    target = addCacheBurst(url);
+  }
+  fetch(target)
   .then(response => { 
     if (params['permitted-status'].includes(response.status)) {
       console.log(new Date().toISOString() + " " + name + " is up (status-code: " + response.status + ")");
@@ -126,13 +141,24 @@ function httpGetCheck(name, url, siteRefresh, params, statusElm) {
     setStatus(statusElm, 'down');
   });
 
-  setTimeout(genHttpGetCheck(name, url, siteRefresh, params, statusElm), siteRefresh*1000);
+  setTimeout(genHttpGetCheck(name, url, siteRefresh, burstCache, params, statusElm), siteRefresh*1000);
 }
 
-window.onload = function() {
+function addCacheBurst(url) {
+  var target = url;
+  var cacheParam = '_cacheBurst=' + new Date().getTime();
+  if (target.includes('?')) {
+    target += '&' + cacheParam;
+  } else {
+    target += '?' + cacheParam;
+  }
+  return target;
+}
+
+window.addEventListener("DOMContentLoaded", e => {
   document.querySelector('#noscript').remove();
   fetch('monitor.json')
     .then(data=>{ return data.json()})
     .then(config=>{setup(config)})
-}
+});
 
