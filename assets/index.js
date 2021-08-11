@@ -1,9 +1,7 @@
 function setStatus(element, state) {
   element.classList.remove('is-success');
-  element.classList.remove('is-warning');
   element.classList.remove('is-danger');
   if (state == 'checking') {
-    element.classList.add('is-warning');
     element.innerText = 'checking';
   } else if (state == 'up') {
     element.classList.add('is-success');
@@ -27,57 +25,71 @@ function setup(config) {
     defaultBurstCache = config['burstCache'];
   }
 
-  for (idx in config['sites']) {
-    const name = config['sites'][idx]['name'];
-    const url = config['sites'][idx]['url'];
-    const whichCheck = config['sites'][idx]['check'];
+  for (grpIdx in config['groups']) {
+    const groupConfig = config['groups'][grpIdx];
+    const groupName = groupConfig['name'];
+    monitorGroup = document.createElement('p');
+    monitorGroup.classList.add('pb-6');
+    checkDiv.appendChild(monitorGroup);
+    h = document.createElement('h2');
+    h.innerText = groupName;
+    h.classList.add('subtitle');
+    h.classList.add('is-5');
+    monitorGroup.appendChild(h);
 
-    var p = document.createElement('p');
-    p.title = whichCheck + ' check for ' + url;
-    checkDiv.appendChild(p);
+    for (idx in groupConfig['monitors']) {
+      const monitorConfig = groupConfig['monitors'][idx];
+      const name = monitorConfig['name'];
+      const url = monitorConfig['url'];
+      const whichCheck = monitorConfig['check'];
 
-    var statusOuter = document.createElement('span');
-    statusOuter.classList.add('statusOuter');
-    statusOuter.classList.add('pr-2');
-    p.appendChild(statusOuter);
+      var p = document.createElement('p');
+      p.title = whichCheck + ' check for ' + url;
+      monitorGroup.appendChild(p);
 
-    var statusSpan = document.createElement('span');
-    statusSpan.classList.add('tag');
-    statusSpan.classList.add('status');
-    statusSpan.classList.add('is-warning');
-    statusSpan.innerText = 'initializing';
-    statusOuter.appendChild(statusSpan);
+      var statusOuter = document.createElement('span');
+      statusOuter.classList.add('statusOuter');
+      statusOuter.classList.add('pr-2');
+      p.appendChild(statusOuter);
 
-    var nameSpan = document.createElement('span');
-    nameSpan.innerText = name;
-    p.appendChild(nameSpan);
+      var statusSpan = document.createElement('span');
+      statusSpan.classList.add('tag');
+      statusSpan.classList.add('status');
+      statusSpan.classList.add('is-light');
+      statusSpan.innerText = 'initializing';
+      statusOuter.appendChild(statusSpan);
+
+      var nameSpan = document.createElement('span');
+      nameSpan.innerText = name;
+      p.appendChild(nameSpan);
 
 
-    var siteRefresh = defaultRefresh;
-    if ('refreshSeconds' in config['sites'][idx]) {
-      siteRefresh = config['sites'][idx]['refreshSeconds'];
-    }
+      var siteRefresh = defaultRefresh;
+      if ('refreshSeconds' in monitorConfig) {
+        siteRefresh = monitorConfig['refreshSeconds'];
+      }
 
-    var params = null;
-    if ('params' in config['sites'][idx]) {
-      params = config['sites'][idx]['params'];
-    }
+      var params = null;
+      if ('params' in monitorConfig) {
+        params = monitorConfig['params'];
+      }
 
-    var burstCache = defaultBurstCache;
-    if ('burstCache' in config['sites'][idx]) {
-      burstCache = config['sites'][idx]['burstCache'];
-    }
+      var burstCache = defaultBurstCache;
+      if ('burstCache' in monitorConfig) {
+        burstCache = monitorConfig['burstCache'];
+      }
 
-    if ('img' == whichCheck) {
-      console.log("Starting img check for " + name + " " + url +
-	      " every " + siteRefresh + " seconds");
-      imgCheck(name, url, siteRefresh, burstCache, statusSpan);
-    } else if ('http-get' == whichCheck) {
-      console.log("Starting http-get check for " + name + " " + url +
-	      " every " + siteRefresh + " seconds");
-      httpGetCheck(name, url, siteRefresh, burstCache, params, statusSpan);
-    } else {
-      console.log('Unsure what to do for ' + name + ' ' + whichCheck);
+      if ('img' == whichCheck) {
+        console.log("Starting img check for " + name + " " + url +
+  	      " every " + siteRefresh + " seconds");
+        imgCheck(name, url, siteRefresh, burstCache, statusSpan);
+      } else if ('http-get' == whichCheck) {
+        console.log("Starting http-get check for " + name + " " + url +
+  	      " every " + siteRefresh + " seconds");
+        httpGetCheck(name, url, siteRefresh, burstCache, params, statusSpan);
+      } else {
+        console.log('Unsure what to do for ' + name + ' ' + whichCheck);
+      }
     }
   }
 }

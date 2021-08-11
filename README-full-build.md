@@ -22,7 +22,7 @@ I like using Docker:
 
 You'll also need to [install nodejs](https://nodejs.org/en/download/).
 
-For on Debian I use:
+For Debian I use:
 
     curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
     sudo apt-get install -y nodejs
@@ -35,7 +35,7 @@ For on Debian I use:
 
 ## Running Locally
 
-    hugo serve --watch --minify
+    hugo serve --watch --minify -b localhost
 
 Or using Docker:
 
@@ -43,7 +43,7 @@ Or using Docker:
       -v $(pwd):/src \
       -p 1313:1313 \
       klakegg/hugo:0.83.1-ext-alpine \
-      serve
+      serve -b localhost
 
 The site should now be visible at [http://localhost:1313/](http://localhost:1313/).
 

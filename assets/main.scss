@@ -7,12 +7,7 @@ span.statusOuter {
   text-align: right;
 }
 
-span.status.is-success {
-  transition-property: background-color, width;
-  transition-duration: 1.2s;
-}
-
-span.status.is-danger {
+span.status {
   transition-property: background-color, width;
   transition-duration: 1.2s;
 }

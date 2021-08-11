@@ -1,55 +1,70 @@
 {
   "refreshSeconds": 600,
   "burstCache": true,
-  "sites": [
+  "groups": [
     {
-      "name": "alexsci.com",
-      "url": "https://alexsci.com/web-audible-ping/pong.txt",
-      "check": "http-get",
-      "refreshSeconds": 10,
-      "params": {
-        "permitted-status": [ 200 ]
-      }
+      "name": "Popular Sites",
+      "monitors": [
+        {
+          "name": "hackernews",
+          "url": "https://news.ycombinator.com/favicon.ico",
+          "check": "img"
+        },
+        {
+          "name": "Wells Fargo",
+          "url": "https://www.wellsfargo.com/favicon.ico",
+          "check": "img"
+        }
+      ]
     },
     {
-      "name": "httpbin (ok)",
-      "url": "https://httpbin.org/status/204",
-      "check": "http-get",
-      "refreshSeconds": 600,
-      "burstCache": false,
-      "params": {
-        "permitted-status": [ 204 ]
-      }
+      "name": "My Sites",
+      "monitors": [
+        {
+          "name": "alexsci.com",
+          "url": "https://alexsci.com/web-audible-ping/pong.txt",
+          "check": "http-get",
+          "refreshSeconds": 10,
+          "params": {
+            "permitted-status": [ 200 ]
+          }
+        }
+      ]
     },
     {
-      "name": "httpbin (down)",
-      "url": "https://httpbin.org/status/500",
-      "check": "http-get",
-      "refreshSeconds": 600,
-      "burstCache": false,
-      "params": {
-        "permitted-status": [ 200 ]
-      }
-    },
-    {
-      "name": "httpbin (intermittent)",
-      "url": "https://httpbin.org/status/204,500",
-      "check": "http-get",
-      "refreshSeconds": 10,
-      "burstCache": false,
-      "params": {
-        "permitted-status": [ 204 ]
-      }
-    },
-    {
-      "name": "hackernews",
-      "url": "https://news.ycombinator.com/favicon.ico",
-      "check": "img"
-    },
-    {
-      "name": "Wells Fargo",
-      "url": "https://www.wellsfargo.com/favicon.ico",
-      "check": "img"
+      "name": "httpbin.org",
+      "monitors": [
+        {
+          "name": "httpbin (/status/200)",
+          "url": "https://httpbin.org/status/200",
+          "check": "http-get",
+          "refreshSeconds": 600,
+          "burstCache": false,
+          "params": {
+            "permitted-status": [ 200 ]
+          }
+	},
+        {
+          "name": "httpbin (/status/500)",
+          "url": "https://httpbin.org/status/500",
+          "check": "http-get",
+          "refreshSeconds": 600,
+          "burstCache": false,
+          "params": {
+            "permitted-status": [ 200 ]
+          }
+        },
+        {
+          "name": "httpbin (/status/200,500)",
+          "url": "https://httpbin.org/status/200,500",
+          "check": "http-get",
+          "refreshSeconds": 10,
+          "burstCache": false,
+          "params": {
+            "permitted-status": [ 200 ]
+          }
+        }
+      ]
     }
   ]
 }
