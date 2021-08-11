@@ -15,6 +15,16 @@ To create your own list of monitored sites: fork this repo, customize the list o
 You shouldn't need to edit the HTML or javascript, just the JSON file.
 
 
+## Running Locally
+
+You can serve the static contents of your fork using any HTTP server.
+I prefer this python version, although [any HTTP server](https://github.com/praharshjain/http-server-one-liners) will work.
+
+    python3 -m http.server 8000
+
+You can now view and test the page at [http://127.0.0.1:8080/](http://127.0.0.1:8000).
+
+
 ## Creating monitors
 
 Edit `monitors.json` to add the monitors you'd like to track.
@@ -72,4 +82,13 @@ Note: `params` is not needed here.
 * `refreshSeconds` retry checks after a period of time
 
 Settings can be applied at the top level (to apply to all sites) or as an override for a per-site configuration.
+
+
+## Console and Network Logs
+
+Your web browser likely supports [developer tools](https://www.computerhope.com/issues/ch002153.htm).
+
+Open the network tab to watch network requests and to see detailed information about their status.
+
+Open the console log to see logs from the application, as well as other error information provided by the web browser.
 
