@@ -58,8 +58,12 @@ function setup(config) {
     }
 
     if ('img' == whichCheck) {
+      console.log("Starting img check for " + name + " " + url +
+	      " every " + siteRefresh + " seconds");
       imgCheck(name, url, siteRefresh, statusSpan);
     } else if ('http-get' == whichCheck) {
+      console.log("Starting http-get check for " + name + " " + url +
+	      " every " + siteRefresh + " seconds");
       httpGetCheck(name, url, siteRefresh, params, statusSpan);
     } else {
       console.log('Unsure what to do for ' + name + ' ' + whichCheck);
@@ -75,18 +79,21 @@ function genImgCheck(name, url, siteRefresh, statusElm) {
 
 function imgCheck(name, url, siteRefresh, statusElm) {
   setStatus(statusElm, 'checking');
-  console.log('Image check: ' + name);
 
   var img = document.createElement('img');
   img.onload = function() {
+    console.log(new Date().toISOString() + " " + name + " is up");
+    img.remove();
     setStatus(statusElm, 'up');
   }
   img.onerror = function() {
+    console.log(new Date().toISOString() + " " + name + " is down");
+    img.remove();
     setStatus(statusElm, 'down');
   }
 
   // Burst the browser cache
-  img.src = url + '?' + Math.random();
+  img.src = url + '?_cacheBurst=' + new Date().getTime();
 
   setTimeout(genImgCheck(name, url, siteRefresh, statusElm), siteRefresh*1000);
 }
@@ -99,14 +106,18 @@ function genHttpGetCheck(name, url, siteRefresh, params, statusElm) {
 
 function httpGetCheck(name, url, siteRefresh, params, statusElm) {
   setStatus(statusElm, 'checking');
-  console.log('HTTP GET check: ' + name);
 
-  fetch(url)
+  // TODO: needs to check if we have the ? already
+  //       optional
+  //       pick parameter name
+  fetch(url + '?_cacheBurst=' + new Date().getTime())
   .then(response => { 
     if (params['permitted-status'].includes(response.status)) {
+      console.log(new Date().toISOString() + " " + name + " is up (status-code: " + response.status + ")");
       setStatus(statusElm, 'up');
     } else {
       // status code not permitted
+      console.log(new Date().toISOString() + " " + name + " is down (status-code: " + response.status + ")");
       setStatus(statusElm, 'down');
     }
   })
