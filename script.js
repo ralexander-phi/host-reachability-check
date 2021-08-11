@@ -23,28 +23,31 @@ function setup(config) {
   }
 
   for (idx in config['sites']) {
-    var p = document.createElement('p');
-    var nameSpan = document.createElement('span');
-    var statusSpan = document.createElement('span');
-    p.appendChild(statusSpan);
-    p.appendChild(nameSpan);
-    checkDiv.appendChild(p);
-
     const name = config['sites'][idx]['name'];
     const url = config['sites'][idx]['url'];
+    const whichCheck = config['sites'][idx]['check'];
 
-    nameSpan.innerText = name;
+    var p = document.createElement('p');
+    p.title = whichCheck + ' check for ' + url;
+    checkDiv.appendChild(p);
+
+    var statusSpan = document.createElement('span');
     statusSpan.classList.add('tag');
     statusSpan.classList.add('m-2');
     statusSpan.classList.add('is-warning');
-    statusSpan.innerText = 'checking';
+    statusSpan.innerText = 'initializing';
+    p.appendChild(statusSpan);
+
+    var nameSpan = document.createElement('span');
+    nameSpan.innerText = name;
+    p.appendChild(nameSpan);
+
 
     var siteRefresh = defaultRefresh;
     if ('refreshSeconds' in config['sites'][idx]) {
       siteRefresh = config['sites'][idx]['refreshSeconds'];
     }
 
-    var whichCheck = config['sites'][idx]['check'];
     var params = null;
     if ('params' in config['sites'][idx]) {
       params = config['sites'][idx]['params'];
