@@ -1,12 +1,21 @@
-function setStatus(element, statusClassName) {
-  element.classList.remove('up');
-  element.classList.remove('down');
-  element.classList.remove('checking');
-  element.classList.add(statusClassName);
+function setStatus(element, state) {
+  element.classList.remove('is-success');
+  element.classList.remove('is-warning');
+  element.classList.remove('is-danger');
+  if (state == 'checking') {
+    element.classList.add('is-warning');
+    element.innerText = 'checking';
+  } else if (state == 'up') {
+    element.classList.add('is-success');
+    element.innerText = 'healthy';
+  } else {
+    element.classList.add('is-danger');
+    element.innerText = 'down';
+  }
 }
 
 function setup(config) {
-  var tbody = document.querySelector('#checks-tbody');
+  var checkDiv = document.querySelector('#checks');
 
   var defaultRefresh = null;
   if ('refreshSeconds' in config) {
@@ -14,20 +23,26 @@ function setup(config) {
   }
 
   for (idx in config['sites']) {
-    var row = tbody.insertRow(-1);
-    var nameCell = row.insertCell(0);
-    var statusCell = row.insertCell(1);
+    var p = document.createElement('p');
+    var nameSpan = document.createElement('span');
+    var statusSpan = document.createElement('span');
+    p.appendChild(statusSpan);
+    p.appendChild(nameSpan);
+    checkDiv.appendChild(p);
+
     const name = config['sites'][idx]['name'];
     const url = config['sites'][idx]['url'];
+
+    nameSpan.innerText = name;
+    statusSpan.classList.add('tag');
+    statusSpan.classList.add('m-2');
+    statusSpan.classList.add('is-warning');
+    statusSpan.innerText = 'checking';
 
     var siteRefresh = defaultRefresh;
     if ('refreshSeconds' in config['sites'][idx]) {
       siteRefresh = config['sites'][idx]['refreshSeconds'];
     }
-
-    nameCell.innerText = name;
-    var statusElm = document.createElement('div');
-    statusCell.appendChild(statusElm);
 
     var whichCheck = config['sites'][idx]['check'];
     var params = null;
@@ -36,9 +51,9 @@ function setup(config) {
     }
 
     if ('img' == whichCheck) {
-      imgCheck(name, url, siteRefresh, statusElm);
+      imgCheck(name, url, siteRefresh, statusSpan);
     } else if ('http-get' == whichCheck) {
-      httpGetCheck(name, url, siteRefresh, params, statusElm);
+      httpGetCheck(name, url, siteRefresh, params, statusSpan);
     } else {
       console.log('Unsure what to do for ' + name + ' ' + whichCheck);
     }
