@@ -6,7 +6,7 @@ function setStatus(element, statusClassName) {
 }
 
 function setup(config) {
-  var table = document.getElementById('checks');
+  var tbody = document.querySelector('#checks-tbody');
 
   var defaultRefresh = null;
   if ('refreshSeconds' in config) {
@@ -14,7 +14,7 @@ function setup(config) {
   }
 
   for (idx in config['sites']) {
-    var row = table.insertRow(-1);
+    var row = tbody.insertRow(-1);
     var nameCell = row.insertCell(0);
     var statusCell = row.insertCell(1);
     const name = config['sites'][idx]['name'];

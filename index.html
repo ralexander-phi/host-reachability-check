@@ -3,31 +3,58 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <title>Reachability Checks</title>
   <meta name="description" content="A simple static host reachability check">
   <meta name="author" content="https://github.com/ralexander-phi/">
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
   <link rel="stylesheet" href="style.css">
   <script src="script.js" async defer></script>
 </head>
 
 <body>
+<section>
+<div class="container">
 
-<h1>Reachability Checks</h1>
+<div class="columns">
+<div class="column is-half">
+<section>
+<div class="box mt-6">
+<h1 class="title">Reachability Checks</h1>
 
 <p id="noscript">
   It looks like you've disabled JavaScript. This tool requires JavaScript. Feel free to audit the script, it's not minified.
 </p>
 
-<table id="checks">
+<div class="column is-half">
+<div class="content">
+<table id="checks" class="table is-bordered is-striped is-narrow is-hoverable m-5">
 <thead>
 <tr><th>Name</th><th>Status</th></tr>
+</thead>
+<tbody id="checks-tbody"></tbody>
 </table>
+</div>
+</div>
+</div>
 
-<h3>About</h3>
+</section>
+</div>
+
+<div class="column is-half">
+<section>
+<div class="box mt-6">
+<h3 class="subtitle">About</h3>
 
 This is a host reachability dashboard that will perform client side reachability checks for a customizable list of sites. All checks are run client side, permitting hosting on static hosting like GitHub Pages. <a href="https://github.com/ralexander-phi/host-reachability-check">Fork me on GitHub.</a>
+</div>
 
+</section>
+</div>
+</div>
+</div>
+</section>
 </body>
 </html>
