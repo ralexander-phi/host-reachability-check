@@ -97,6 +97,7 @@ function httpGetCheck(name, url, siteRefresh, params, statusElm) {
 }
 
 window.onload = function() {
+  document.querySelector('#noscript').remove();
   fetch('monitor.json')
     .then(data=>{ return data.json()})
     .then(config=>{setup(config)})
