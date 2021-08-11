@@ -1,4 +1,4 @@
-baseURL = "/"
+baseURL = "/host-reachability-check/"
 languageCode = "en-us"
 title = "Reachability Checks"
 
