@@ -1,13 +1,14 @@
 function setStatus(element, state) {
-  element.classList.remove('is-success');
-  element.classList.remove('is-danger');
   if (state == 'checking') {
     element.innerText = 'checking';
+    // keep existing color
   } else if (state == 'up') {
     element.classList.add('is-success');
+    element.classList.remove('is-danger');
     element.innerText = 'healthy';
   } else {
     element.classList.add('is-danger');
+    element.classList.remove('is-success');
     element.innerText = 'down';
   }
 }
@@ -55,7 +56,6 @@ function setup(config) {
       var statusSpan = document.createElement('span');
       statusSpan.classList.add('tag');
       statusSpan.classList.add('status');
-      statusSpan.classList.add('is-light');
       statusSpan.innerText = 'initializing';
       statusOuter.appendChild(statusSpan);
 
@@ -94,9 +94,9 @@ function setup(config) {
   }
 }
 
-function genImgCheck(name, url, siteRefresh, statusElm) {
+function genImgCheck(name, url, siteRefresh, burstCache, statusElm) {
   return function() {
-    imgCheck(name, url, siteRefresh, statusElm);
+    imgCheck(name, url, siteRefresh, burstCache, statusElm);
   }
 }
 
@@ -108,11 +108,13 @@ function imgCheck(name, url, siteRefresh, burstCache, statusElm) {
     console.log(new Date().toISOString() + " " + name + " is up");
     img.remove();
     setStatus(statusElm, 'up');
+    setTimeout(genImgCheck(name, url, siteRefresh, burstCache, statusElm), siteRefresh*1000);
   }
   img.onerror = function() {
     console.log(new Date().toISOString() + " " + name + " is down");
     img.remove();
     setStatus(statusElm, 'down');
+    setTimeout(genImgCheck(name, url, siteRefresh, burstCache, statusElm), siteRefresh*1000);
   }
 
   var target = url;
@@ -120,8 +122,6 @@ function imgCheck(name, url, siteRefresh, burstCache, statusElm) {
     target = addCacheBurst(url);
   }
   img.src = target;
-
-  setTimeout(genImgCheck(name, url, siteRefresh, burstCache, statusElm), siteRefresh*1000);
 }
 
 function genHttpGetCheck(name, url, siteRefresh, burstCache, params, statusElm) {

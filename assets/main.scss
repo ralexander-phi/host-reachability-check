@@ -1,5 +1,9 @@
 @charset "utf-8";
+
+@import "variables";
 @import "../node_modules/bulma/bulma.sass";
+@import "overrides";
+
 
 span.statusOuter {
   width: 5.5rem;
@@ -8,7 +12,7 @@ span.statusOuter {
 }
 
 span.status {
-  transition-property: background-color, width;
+  transition-property: background-color;
   transition-duration: 1.2s;
 }
 
