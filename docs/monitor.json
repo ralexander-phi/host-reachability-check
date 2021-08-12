@@ -35,7 +35,7 @@
       "name": "httpbin.org",
       "monitors": [
         {
-          "name": "httpbin (/status/200)",
+          "name": "/status/200",
           "url": "https://httpbin.org/status/200",
           "check": "http-get",
           "refreshSeconds": 600,
@@ -45,7 +45,7 @@
           }
 	},
         {
-          "name": "httpbin (/status/500)",
+          "name": "/status/500",
           "url": "https://httpbin.org/status/500",
           "check": "http-get",
           "refreshSeconds": 600,
@@ -55,7 +55,7 @@
           }
         },
         {
-          "name": "httpbin (/status/200,500)",
+          "name": "/status/200,500",
           "url": "https://httpbin.org/status/200,500",
           "check": "http-get",
           "refreshSeconds": 10,
@@ -64,6 +64,23 @@
             "permitted-status": [ 200 ]
           }
         }
+      ]
+    },
+    {
+      "name": "offline",
+      "monitors": [
+        {
+          "name": "invalid subdomain",
+          "url": "https://doesnotexist.alexsci.com/invalid.png",
+          "check": "img",
+          "refreshSeconds": 10
+	},
+        {
+          "name": "should timeout",
+          "url": "https://192.0.2.0/timeout.png",
+          "check": "img",
+          "refreshSeconds": 10
+	}
       ]
     }
   ]
