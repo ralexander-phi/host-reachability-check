@@ -29,14 +29,19 @@ function setup(config) {
   for (grpIdx in config['groups']) {
     const groupConfig = config['groups'][grpIdx];
     const groupName = groupConfig['name'];
+    groupDetails = document.createElement('details');
+    groupDetails.open = true;
+    checkDiv.appendChild(groupDetails);
+
+    groupSummary = document.createElement('summary');
+    groupSummary.innerText = groupName;
+    groupSummary.classList.add('subtitle');
+    groupSummary.classList.add('is-5');
+    groupDetails.appendChild(groupSummary);
+
     monitorGroup = document.createElement('p');
     monitorGroup.classList.add('pb-6');
-    checkDiv.appendChild(monitorGroup);
-    h = document.createElement('h2');
-    h.innerText = groupName;
-    h.classList.add('subtitle');
-    h.classList.add('is-5');
-    monitorGroup.appendChild(h);
+    groupDetails.appendChild(monitorGroup);
 
     for (idx in groupConfig['monitors']) {
       const monitorConfig = groupConfig['monitors'][idx];
