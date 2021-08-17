@@ -51,6 +51,18 @@ If you're looking to change the HTML, JavaScript, or CSS, you'll need to follow 
 
 Edit `monitor.json` to add the sites you'd like to monitor.
 
+### Monitor Groups
+
+Group your monitors under groups with `groups`.
+
+Each group must have a `name` and `monitors` set.
+The monitors must be a list of monitors, per below.
+
+Each group may also have an `about` field that provided help text about the group.
+
+
+### About Monitors
+
 There are two types of monitors supported:
 * `http-get` - Performs an HTTP GET
 * `img` - Tries to load an image

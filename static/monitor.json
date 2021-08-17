@@ -33,6 +33,7 @@
     },
     {
       "name": "httpbin.org",
+      "about": "Showcase httpbin.org custom status codes",
       "monitors": [
         {
           "name": "/status/200",
@@ -68,6 +69,7 @@
     },
     {
       "name": "offline",
+      "about": "For testing: should always fail",
       "monitors": [
         {
           "name": "invalid subdomain",

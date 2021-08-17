@@ -44,7 +44,14 @@ function setup(config) {
   for (grpIdx in config['groups']) {
     const groupConfig = config['groups'][grpIdx];
     const groupName = groupConfig['name'];
+    var aboutGroup = null;
+    if ('about' in groupConfig) {
+      aboutGroup = groupConfig['about'];
+    }
+
     var groupDetails = document.createElement('details');
+    groupDetails.title = "click to show/hide group";
+    groupDetails.classList.add('group-detail');
     groupDetails.open = true;
     checkDiv.appendChild(groupDetails);
 
@@ -52,26 +59,34 @@ function setup(config) {
     groupSummary.innerText = groupName;
     groupSummary.classList.add('subtitle');
     groupSummary.classList.add('is-5');
+    groupSummary.classList.add('mb-5');
     groupDetails.appendChild(groupSummary);
+
 
     var monitorGroup = document.createElement('p');
     monitorGroup.classList.add('pb-6');
     groupDetails.appendChild(monitorGroup);
+
+    if (aboutGroup) {
+      var groupHelp = document.createElement('p');
+      groupHelp.innerText = aboutGroup;
+      monitorGroup.appendChild(groupHelp);
+    }
 
     for (idx in groupConfig['monitors']) {
       const monitorConfig = groupConfig['monitors'][idx];
       const name = monitorConfig['name'];
       const url = monitorConfig['url'];
       const whichCheck = monitorConfig['check'];
-      var about;
+      var about = null;
       if ('about' in monitorConfig) {
         about = monitorConfig['about'];
-      } else {
-        about = null;
       }
 
       var monitorDetails = document.createElement('details');
       monitorDetails.classList.add('pb-2');
+      monitorDetails.classList.add('monitor-detail');
+      monitorDetails.title = "click to show/hide monitor details";
       monitorGroup.appendChild(monitorDetails);
 
       var monitorSummary = document.createElement('summary');

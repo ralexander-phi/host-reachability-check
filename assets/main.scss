@@ -16,3 +16,10 @@ span.status {
   transition-duration: 1.2s;
 }
 
+::marker{ display:none; }
+summary{ list-style: none }
+
+details:not([open]).group-detail > summary {
+  text-decoration:line-through;
+}
+
