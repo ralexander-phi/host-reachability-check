@@ -43,7 +43,7 @@
           "params": {
             "permitted-status": [ 200 ]
           }
-	},
+        },
         {
           "name": "/status/500",
           "url": "https://httpbin.org/status/500",
@@ -74,13 +74,14 @@
           "url": "https://doesnotexist.alexsci.com/invalid.png",
           "check": "img",
           "refreshSeconds": 10
-	},
+        },
         {
           "name": "should timeout",
-          "url": "https://192.0.2.0/timeout.png",
+          "url": "https://192.0.2.1/timeout.png",
           "check": "img",
+          "about": "See: https://developers.google.com/style/examples#example-ip-addresses",
           "refreshSeconds": 10
-	}
+        }
       ]
     }
   ]

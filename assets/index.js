@@ -13,6 +13,21 @@ function setStatus(element, state) {
   }
 }
 
+function logMessage(element, name, msg) {
+  var timestamp = new Date().toLocaleTimeString();
+  var p = document.createElement('p');
+  p.innerText = timestamp + ": " + msg;
+  addToListMaxSize(element, p, 20);
+  console.log(timestamp + ": " + name + " " + msg);
+}
+
+function addToListMaxSize(listElement, toAdd, maxSize) {
+  while (listElement.childElementCount >= maxSize) {
+    listElement.removeChild(listElement.firstChild);
+  }
+  listElement.appendChild(toAdd);
+}
+
 function setup(config) {
   var checkDiv = document.querySelector('#checks');
 
@@ -29,17 +44,17 @@ function setup(config) {
   for (grpIdx in config['groups']) {
     const groupConfig = config['groups'][grpIdx];
     const groupName = groupConfig['name'];
-    groupDetails = document.createElement('details');
+    var groupDetails = document.createElement('details');
     groupDetails.open = true;
     checkDiv.appendChild(groupDetails);
 
-    groupSummary = document.createElement('summary');
+    var groupSummary = document.createElement('summary');
     groupSummary.innerText = groupName;
     groupSummary.classList.add('subtitle');
     groupSummary.classList.add('is-5');
     groupDetails.appendChild(groupSummary);
 
-    monitorGroup = document.createElement('p');
+    var monitorGroup = document.createElement('p');
     monitorGroup.classList.add('pb-6');
     groupDetails.appendChild(monitorGroup);
 
@@ -48,26 +63,51 @@ function setup(config) {
       const name = monitorConfig['name'];
       const url = monitorConfig['url'];
       const whichCheck = monitorConfig['check'];
+      var about;
+      if ('about' in monitorConfig) {
+        about = monitorConfig['about'];
+      } else {
+        about = null;
+      }
 
-      var p = document.createElement('p');
-      p.title = whichCheck + ' check for ' + url;
-      monitorGroup.appendChild(p);
+      var monitorDetails = document.createElement('details');
+      monitorDetails.classList.add('pb-2');
+      monitorGroup.appendChild(monitorDetails);
+
+      var monitorSummary = document.createElement('summary');
+      monitorDetails.appendChild(monitorSummary);
 
       var statusOuter = document.createElement('span');
       statusOuter.classList.add('statusOuter');
       statusOuter.classList.add('pr-2');
-      p.appendChild(statusOuter);
+      monitorSummary.appendChild(statusOuter);
 
       var statusSpan = document.createElement('span');
       statusSpan.classList.add('tag');
       statusSpan.classList.add('status');
+      statusSpan.classList.add('monitor-status');
       statusSpan.innerText = 'initializing';
       statusOuter.appendChild(statusSpan);
 
       var nameSpan = document.createElement('span');
       nameSpan.innerText = name;
-      p.appendChild(nameSpan);
+      monitorSummary.appendChild(nameSpan);
 
+      var details = document.createElement('pre');
+      details.classList.add('monitor-details');
+      details.classList.add('m-2');
+      monitorDetails.appendChild(details);
+      var detailsHeader = document.createElement('div');
+      detailsHeader.innerText = "URL: " + url;
+      details.appendChild(detailsHeader);
+      var detailsHeader2 = document.createElement('p');
+      detailsHeader2.innerText = "Check Type: " + whichCheck;
+      details.appendChild(detailsHeader2);
+      if (about) {
+        var detailsHeader3 = document.createElement('p');
+        detailsHeader3.innerText = about;
+        details.appendChild(detailsHeader3);
+      }
 
       var siteRefresh = defaultRefresh;
       if ('refreshSeconds' in monitorConfig) {
@@ -87,11 +127,11 @@ function setup(config) {
       if ('img' == whichCheck) {
         console.log("Starting img check for " + name + " " + url +
   	      " every " + siteRefresh + " seconds");
-        imgCheck(name, url, siteRefresh, burstCache, statusSpan);
+        imgCheck(name, url, siteRefresh, burstCache, monitorDetails);
       } else if ('http-get' == whichCheck) {
         console.log("Starting http-get check for " + name + " " + url +
   	      " every " + siteRefresh + " seconds");
-        httpGetCheck(name, url, siteRefresh, burstCache, params, statusSpan);
+        httpGetCheck(name, url, siteRefresh, burstCache, params, monitorDetails);
       } else {
         console.log('Unsure what to do for ' + name + ' ' + whichCheck);
       }
@@ -99,27 +139,29 @@ function setup(config) {
   }
 }
 
-function genImgCheck(name, url, siteRefresh, burstCache, statusElm) {
+function genImgCheck(name, url, siteRefresh, burstCache, monitorElm) {
   return function() {
-    imgCheck(name, url, siteRefresh, burstCache, statusElm);
+    imgCheck(name, url, siteRefresh, burstCache, monitorElm);
   }
 }
 
-function imgCheck(name, url, siteRefresh, burstCache, statusElm) {
+function imgCheck(name, url, siteRefresh, burstCache, monitorElm) {
+  var statusElm = monitorElm.querySelector('.monitor-status');
+  var monitorDetails = monitorElm.querySelector('.monitor-details');
   setStatus(statusElm, 'checking');
 
   var img = document.createElement('img');
   img.onload = function() {
-    console.log(new Date().toISOString() + " " + name + " is up");
+    logMessage(monitorDetails, name, "up");
     img.remove();
     setStatus(statusElm, 'up');
-    setTimeout(genImgCheck(name, url, siteRefresh, burstCache, statusElm), siteRefresh*1000);
+    setTimeout(genImgCheck(name, url, siteRefresh, burstCache, monitorElm), siteRefresh*1000);
   }
   img.onerror = function() {
-    console.log(new Date().toISOString() + " " + name + " is down");
+    logMessage(monitorDetails, name, "down");
     img.remove();
     setStatus(statusElm, 'down');
-    setTimeout(genImgCheck(name, url, siteRefresh, burstCache, statusElm), siteRefresh*1000);
+    setTimeout(genImgCheck(name, url, siteRefresh, burstCache, monitorElm), siteRefresh*1000);
   }
 
   var target = url;
@@ -129,13 +171,15 @@ function imgCheck(name, url, siteRefresh, burstCache, statusElm) {
   img.src = target;
 }
 
-function genHttpGetCheck(name, url, siteRefresh, burstCache, params, statusElm) {
+function genHttpGetCheck(name, url, siteRefresh, burstCache, params, monitorElm) {
   return function() {
-    httpGetCheck(name, url, siteRefresh, burstCache, params, statusElm);
+    httpGetCheck(name, url, siteRefresh, burstCache, params, monitorElm);
   }
 }
 
-function httpGetCheck(name, url, siteRefresh, burstCache, params, statusElm) {
+function httpGetCheck(name, url, siteRefresh, burstCache, params, monitorElm) {
+  var statusElm = monitorElm.querySelector('.monitor-status');
+  var monitorDetails = monitorElm.querySelector('.monitor-details');
   setStatus(statusElm, 'checking');
 
   var target = url;
@@ -145,20 +189,21 @@ function httpGetCheck(name, url, siteRefresh, burstCache, params, statusElm) {
   fetch(target)
   .then(response => { 
     if (params['permitted-status'].includes(response.status)) {
-      console.log(new Date().toISOString() + " " + name + " is up (status-code: " + response.status + ")");
+      logMessage(monitorDetails, name, "up (status-code: " + response.status + ")");
       setStatus(statusElm, 'up');
     } else {
       // status code not permitted
-      console.log(new Date().toISOString() + " " + name + " is down (status-code: " + response.status + ")");
+      logMessage(monitorDetails, name, "down (status-code: " + response.status + ")");
       setStatus(statusElm, 'down');
     }
   })
   .catch(reason=>{
     // network error
+    logMessage(monitorDetails, name, "down (see developer tools network tab)");
     setStatus(statusElm, 'down');
   });
 
-  setTimeout(genHttpGetCheck(name, url, siteRefresh, burstCache, params, statusElm), siteRefresh*1000);
+  setTimeout(genHttpGetCheck(name, url, siteRefresh, burstCache, params, monitorElm), siteRefresh*1000);
 }
 
 function addCacheBurst(url) {
