@@ -58,13 +58,19 @@ There are two types of monitors supported:
 To add your monitor add a `name`, `url`, `check`, and any `params` as needed.
 See the sample `monitor.json` for details.
 
+You may set an `about` field to your monitors to include help text explaining the purpose of the monitor.
+
 
 ### HTTP GET monitors
+
+Create an HTTP GET monitor by setting the `check` field to `http-get`.
 
 This monitor will run an HTTP GET against the selected URL and check if the HTTP status code is in a list of acceptable codes.
 
 HTTP GET monitors are limited by [CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) and cannot work when CORS doesn't permit resources to load.
 You may need to log in to each site if the health endpoint requires a user authentication cookie.
+
+An HTTP GET monitor will determine the health of the response based on the HTTP status code. You can configure status codes to consider healthy under `params` > `permittes-status`.
 
 Example:
 ```
@@ -73,12 +79,14 @@ Example:
   "url": "https://example.com/health",
   "check": "http-get",
   "params": {
-    "permitted-status": [ 200, 204 ],
+    "permitted-status": [ 200, 204 ]
   }
 }
 ```
 
 ### Image monitors
+
+Create an image monitor by setting the `check` field to `img`.
 
 The image monitor isn't restricted by CORS limitations, so it will work for more sites.
 
@@ -94,7 +102,7 @@ Example:
 {
   "name": "example",
   "url": "https://example.com/favicon.ico",
-  "check": "img",
+  "check": "img"
 }
 ```
 
