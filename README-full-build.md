@@ -14,7 +14,7 @@ I like using Docker:
     docker run --rm -it \
       -v $(pwd):/src \
       -p 1313:1313 \
-      klakegg/hugo:0.83.1-ext-alpine \
+      klakegg/hugo:ext-alpine \
       serve
 
 
@@ -61,7 +61,7 @@ Or using Docker:
     docker run --rm -it \
       -v $(pwd):/src \
       -p 1313:1313 \
-      klakegg/hugo:0.83.1-ext-alpine \
+      klakegg/hugo:ext-alpine \
       --minify
 
 Pay special attention to `docs/monitor.json` and `static/monitor.json` to keep these in sync.
